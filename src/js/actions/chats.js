@@ -57,3 +57,14 @@ export const createChat = (formData, userId) => async dispatch => {
     dispatch({type: 'CHAT_JOIN_SUCCESS', chat: {...buildChat, id: chatId}});
     return chatId;
 }
+
+export const followChat = chatId => dispatch => 
+    service
+        .followChat(chatId, async (chat) => {
+            const joinedUsers = await Promise.all(chat.joinedUsers.map(async userRef => {
+                const userSnapshot = await userRef.get();
+                return userSnapshot.data();
+            }))
+            chat.joinedUsers = joinedUsers;
+            dispatch({type: 'CHAT_SET_ACTIVE', chat})
+        })
