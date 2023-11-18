@@ -68,3 +68,10 @@ export const followChat = chatId => dispatch =>
             chat.joinedUsers = joinedUsers;
             dispatch({type: 'CHAT_SET_ACTIVE', chat})
         })
+
+        
+export const followStatus = (uid, chatId) => dispatch => 
+    service
+        .followStatus(uid, user => {
+            dispatch({type: 'UPDATE_USER_STATE', user, chatId})
+        })

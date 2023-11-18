@@ -29,17 +29,27 @@ function createChatReducer() {
         }
     }
 
-    const activeChat = createReducer({}, {
+    const activeChats = createReducer({}, {
         'CHAT_SET_ACTIVE': (state, action) => {
             const { chat } = action;
             state[chat.id] = chat;
+        },
+        'UPDATE_USER_STATE': (state, action) => {
+            const {user, chatId} = action;
+            const chatUsers = state[chatId].joinedUsers;
+            const index = chatUsers.findIndex(user => user.uid === user.uid);
+
+            if(index<0) return state;
+            if(chatUsers[index].state === user.state) return state;
+
+            chatused[index].state = user.state;
         }
     })
 
     return combineReducers({
         joinedChats,
         availableChats,
-        activeChat
+        activeChats
     });
 }
 

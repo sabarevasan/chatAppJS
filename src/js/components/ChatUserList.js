@@ -20,7 +20,7 @@ export default function ChatUserList({users=[]}) {
             className="item">
             <div className="item-status">
               <img src={user.avatar} alt={user.username} />
-              <span className="status online"></span>
+              <span className={`status ${user.state}`}></span>
             </div>
             <p className="name-time">
             <span className="name mr-2">{user.username}</span>

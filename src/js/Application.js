@@ -14,6 +14,7 @@ import Settings from './views/Settings';
 import Welcome from './views/Welcome';
 import { listenToAuthChange } from './actions/auth';
 import { listenToConnectionChanges } from './actions/global';
+import { checkUserConnection } from './actions/connection';
 import Loader from './components/common/Loader';
 
 function AuthorizedRoute({children, ...rest}) {
@@ -37,6 +38,7 @@ function ChatApp() {
   const dispatch = useDispatch();
   const processing = useSelector(({auth}) => auth.processing);
   const isOnline = useSelector(({global}) => global.isOnline);
+  const user = useSelector(({auth}) => auth.user);
 
   useEffect(() => {
     const unsubFromAuth = dispatch(listenToAuthChange());
@@ -47,6 +49,16 @@ function ChatApp() {
       unsubFromConnectionStatus();
     }
   }, [dispatch])
+
+  useEffect(() => {
+    let unsubFromUserConnection;
+    if(user?.uid) {
+      unsubFromUserConnection = dispatch(checkUserConnection(user.uid));
+    }
+    return () => {
+      unsubFromUserConnection && unsubFromUserConnection();
+    }
+  }, [dispatch, user])
 
   if(!isOnline) {
     return <Loader message='Disconnected! Please reconnect....'/>
